@@ -79,7 +79,52 @@
                 </div>
             </div>
         </div>
+    <!-- 分类商品列表信息 -->
+    <div class="section">
+            <div v-for='(item,index) in goodslist' :key='index'>
+           <!--子类-->
+           <div class="main-tit">
+           <h2>{{item.catetitle}}</h2>
+           <p>
+            
+           <a href="/goods/43.html" v-for='(subitem,index) in item.level2catelist' :key='index'>{{subitem.subcatetitle}}</a>
+           <a href="/goods/40.html">更多
+           <i>+</i>
+           </a>
+           </p>
+           </div>
+           <!--/子类-->
+           <div class="wrapper clearfix">
+           <div class="wrap-box">
+           <ul class="img-list">
+            
+           <li v-for='(item,index) in item.datas' :key='index'>
+           <a href="/goods/show-91.html">
+           <div class="img-box">
+           <img :src="item.img_url">
+           </div>
+           <div class="info">
+           <h3 v-text='item.artTitle'></h3>
+           <p class="price">
+           <b>¥{{item.sell_price}}</b>元</p>
+           <p>
+           <strong>库存 {{item.stock_quantity}}</strong>
+           <span>市场价：
+           <s>{{item.market_price}}</s>
+           </span>
+           </p>
+           </div>
+           </a>
+           </li>
+            
+
+           </ul>
+           </div>
+           </div>
+           </div>
+        </div>
     </div>
+</div>
 </div>
 </template>
 
@@ -87,11 +132,13 @@
     export default {
         data() {
             return {
-                topdata: {}
+                topdata: {},
+                goodslist: []
             }
         },
         created() {
             this.gettopdata();
+            this.getgoodslist();
         },
         methods: {
             gettopdata() {
@@ -102,8 +149,18 @@
                     }
                     this.topdata = res.data.message;
                 })
+            },
+            getgoodslist() {
+                var url = '/site/goods/getgoodsgroup';
+                this.$http.get(url).then(res => {
+                    if (res.data.status == 1) {
+                        return this.$message.error(res.data.message);
+                    }
+                    this.goodslist = res.data.message;
+                })
             }
         }
+
     }
 </script>
 <style scoped>
