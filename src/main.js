@@ -31,6 +31,7 @@ var router = new vueRouter({
             component: layout,
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist }, //商品列表的路由规则
+                { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo }
             ]
         }
     ]

@@ -46,6 +46,7 @@
                     <div class="left-705">
                         <div class="banner-img">
                             <div id="focus-box" class="focus-box">
+                                <!-- 使用elementUI的走马灯实现-->
                                     <el-carousel :interval="5000" arrow="always">
                                             <el-carousel-item v-for="item in topdata.sliderlist" :key="item.id">
                                                 <img :src="item.img_url" alt="">
@@ -68,7 +69,9 @@
                                     <img :src="item.img_url" >
                                 </div>
                                 <div class="txt-box">
-                                    <a href="/goods/show-98.html">{{item.title}}</a>
+                                    <router-link v-bind="{to:'/site/goodsinfo/'+item.id}">
+                                            <a href="/goods/show-98.html">{{item.title}}</a>
+                                    </router-link>
                                     <span>{{item.add_time | datefmt('YYYY-MM-DD')}}</span>
                                 </div>
                             </li>
@@ -101,7 +104,9 @@
            <li v-for='(item,index) in item.datas' :key='index'>
            <a href="/goods/show-91.html">
            <div class="img-box">
-           <img :src="item.img_url">
+               <router-link v-bind="{to:'/site/goodsinfo/'+item.artID}">
+                    <img :src="item.img_url">
+                </router-link>
            </div>
            <div class="info">
            <h3 v-text='item.artTitle'></h3>
