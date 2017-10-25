@@ -85,23 +85,23 @@
         <div id="tabHead" class="tab-head" style="position: static; top: 517px; width: 925px;">
         <ul>
         <li>
-        <a class="selected" href="javascript:;">商品介绍</a>
+        <a v-bind="{class:isContent?'selected':''}" href="javascript:;" @click='changeContent(true)'>商品介绍</a>
         </li>
         <li>
-        <a href="javascript:;" class="">商品评论</a>
+        <a  v-bind="{class:!isContent?'selected':''}" href="javascript:;" @click='changeContent(false)'>商品评论</a>
         </li>
         </ul>
         </div>
         <!--/选项卡-->
 
         <!--选项内容-->
-        <div class="tab-content entry" style="display:none;">
+        <div class="tab-content entry" v-if='isContent'>
             <!-- 对于含有标签的 使用v-html来绑定数据 -->
             <span v-html='ginfo.goodsinfo.content'></span>
 
         </div>
 
-        <div class="tab-content" style="display: block;">
+        <div class="tab-content" v-if='!isContent'>
         <!--网友评论-->
         <div class="comment-box">
         <!--取得评论总数-->
@@ -178,13 +178,17 @@
     export default {
         data() {
             return {
-                ginfo: {}
+                ginfo: {},
+                isContent: true
             }
         },
         created() {
             this.getginfo(); //写完之后记得调用
         },
         methods: {
+            changeContent(val) {
+                this.isContent = val;
+            },
             getginfo() {
                 var goodsid = this.$route.params.goodsid;
                 var url = '/site/goods/getgoodsinfo/' + goodsid; //易错点：这里不要写成this.goodsid
