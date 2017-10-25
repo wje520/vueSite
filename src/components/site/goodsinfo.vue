@@ -111,7 +111,7 @@
         </div>
         <div class="conn-box">
         <div class="editor">
-        <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！" v-model='commentText'></textarea>
+        <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！" v-model='content'></textarea>
         <span class="Validform_checktip"></span></div>
         <div class="subcon">
         <input id="btnSubmit" name="submit" type="button" value="提交评论" class="submit" @click='submitComment'>
@@ -120,13 +120,31 @@
         </form>
         <ul id="commentList" class="list-box">
         <p style="margin:5px 0 15px 69px;line-height:42px;text-align:center;border:1px solid #f7f7f7;">暂无评论，快来抢沙发吧！</p>
-        <li><div class="avatar-box"><i class="iconfont icon-user-full"></i></div><div class="inner-box"><div class="info"><span>匿名用户</span>
-        <span>2017/10/23 14:58:59</span></div><p>testtesttest</p></div></li><li><div class="avatar-box"><i class="iconfont icon-user-full"></i></div><div class="inner-box"><div class="info"><span>匿名用户</span>
-        <span>2017/10/23 14:59:36</span></div><p>很清晰调动单很清晰调动单</p></div></li>
+        <!-- 循环生成评论数据 -->
+        <li v-for='item in commentList' :key='item.id'>
+            <div class="avatar-box"><i class="iconfont icon-user-full"></i></div>
+            <div class="inner-box">
+                <div class="info">
+                    <span>{{item.user_name}}</span>
+                    <span>{{item.add_time | datefmt('YYYY-MM-DD HH:mm:ss')}}</span>
+                </div><p>{{item.content}}</p>
+            </div>
+        </li>
         </ul>
         <!--放置页码-->
         <div class="page-box" style="margin:5px 0 0 62px">
-        <div id="pagination" class="digg"><span class="disabled">« 上一页</span><span class="current">1</span><span class="disabled">下一页 »</span></div>
+        <div id="pagination" class="digg">
+            <!-- 使用elementUI的分页 -->
+            <el-pagination
+            @size-change="sizeChange"
+            @current-change="currentChange"
+            :current-page="pageIndex"
+            :page-sizes="[1,10,20,30,50,80]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalcount">
+          </el-pagination>
+        </div>
         </div>
         <!--/放置页码-->
         </div>
@@ -181,39 +199,67 @@
 
                 ginfo: {},
                 isContent: true,
-                commentText: ''
+                content: '',
+                pageIndex: 1,
+                pageSize: 10,
+                totalcount: 0,
+                commentList: [] //接收后台返回的评论数据，v-for循环生成
 
             }
         },
         created() {
             this.getginfo(); //写完之后记得调用
+            this.getcommentlist();
         },
         methods: {
+            //分页功能
+            sizeChange(val) {
+                this.pageSize = val;
+                this.getcommentlist();
+            },
+            currentChange(val) {
+                this.pageIndex = val;
+                this.getcommentlist();
+            },
+            //获取评论信息
+            getcommentlist() {
+                var goodsid = this.$route.params.goodsid;
+                var url = '/site/comment/getbypage/goods/' + goodsid + '?pageIndex=' + this.pageIndex + '&pageSize=' + this.pageSize;
+                this.$http.get(url).then(res => {
+                    if (res.data.status == 1) {
+                        return this.$message.error(res.data.message);
+                    }
+                    // console.log(res.data.message)
+                    //获取接口返回的评论数据并赋值
+                    this.commentList = res.data.message;
+                    //把返回的总条数赋值给初始化后的totalcount
+                    this.totalcount = res.data.totalcount;
+                })
+            },
             //提交评论思路：主要是url+商品id，发送的参数是v-model绑定的评论内容
             submitComment() {
                 // 没写评论给出错误提示
-                if (this.commentText.length <= 0) {
+                if (this.content.length <= 0) {
                     return this.$message.error('评论信息不能为空');
                 }
                 var goodsid = this.$route.params.goodsid;
                 var url = '/site/validate/comment/post/goods/' + goodsid;
-                this.$http.post(url, this.commentText).then(res => {
+                this.$http.post(url, {
+                    "commenttxt": this.content
+                }).then(res => {
                     if (res.data.status == 1) {
                         return this.$message.error(res.data.message);
                     }
-                    this.commentText = '';
+                    this.content = '';
                     this.$message({
-                            message: '评论新增成功',
-                            type: 'success'
-                        })
-                        // this.getcommentlist();  //重新获取评论信息
+                        message: '评论新增成功',
+                        type: 'success'
+                    })
+                    this.getcommentlist(); //重新获取评论信息
                 })
 
             },
-            //获取评论信息
-            // getcommentlist(){
-            //     var url='/site/comment/getbypage/'+goodsid+'?'+pageIndex=1+&pageSize=每页显示条数'
-            // },
+
             // 商品介绍和评论切换
             changeContent(val) {
                 this.isContent = val;
