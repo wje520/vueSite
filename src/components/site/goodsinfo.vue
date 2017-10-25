@@ -111,10 +111,10 @@
         </div>
         <div class="conn-box">
         <div class="editor">
-        <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+        <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！" v-model='commentText'></textarea>
         <span class="Validform_checktip"></span></div>
         <div class="subcon">
-        <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit">
+        <input id="btnSubmit" name="submit" type="button" value="提交评论" class="submit" @click='submitComment'>
         <span class="Validform_checktip"></span></div>
         </div>
         </form>
@@ -178,14 +178,43 @@
     export default {
         data() {
             return {
+
                 ginfo: {},
-                isContent: true
+                isContent: true,
+                commentText: ''
+
             }
         },
         created() {
             this.getginfo(); //写完之后记得调用
         },
         methods: {
+            //提交评论思路：主要是url+商品id，发送的参数是v-model绑定的评论内容
+            submitComment() {
+                // 没写评论给出错误提示
+                if (this.commentText.length <= 0) {
+                    return this.$message.error('评论信息不能为空');
+                }
+                var goodsid = this.$route.params.goodsid;
+                var url = '/site/validate/comment/post/goods/' + goodsid;
+                this.$http.post(url, this.commentText).then(res => {
+                    if (res.data.status == 1) {
+                        return this.$message.error(res.data.message);
+                    }
+                    this.commentText = '';
+                    this.$message({
+                            message: '评论新增成功',
+                            type: 'success'
+                        })
+                        // this.getcommentlist();  //重新获取评论信息
+                })
+
+            },
+            //获取评论信息
+            // getcommentlist(){
+            //     var url='/site/comment/getbypage/'+goodsid+'?'+pageIndex=1+&pageSize=每页显示条数'
+            // },
+            // 商品介绍和评论切换
             changeContent(val) {
                 this.isContent = val;
             },
