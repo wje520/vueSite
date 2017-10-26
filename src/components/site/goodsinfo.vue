@@ -218,6 +218,11 @@
 </template>
 
 <script>
+    //导入localStorageKit.js
+    import {
+        setItem
+    } from '../../kits/localStorageKit.js'
+
     //引入vm.js
     import {
         vm,
@@ -272,6 +277,10 @@
                 //方式2：通过vuex触发changeBuyCount   注意这里的this.buyCount是goodsinfo.vue组件中定义的
                 this.$store.dispatch('changeBuyCount', this.buyCount);
 
+                setItem({
+                    gid: this.$route.params.goodsid,
+                    bCount: this.buyCount
+                })
             },
             //分页功能
             sizeChange(val) {
