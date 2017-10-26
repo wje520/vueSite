@@ -120,6 +120,14 @@
         created() {
             this.getcarglist();
         },
+        //使用计算属性统计商品数量
+        computed: {
+            getCount() {
+                var trueArr = this.values.filter(item => {
+                    return item;
+                })
+            }
+        },
         methods: {
             //全选和取消功能
             selectAll() {
@@ -143,7 +151,14 @@
                     this.isselectAll = false;
                     this.selecttxt = '全选';
                 }
-
+                var trueArr = this.values.filter(item => {
+                    return item;
+                });
+                console.log(trueArr)
+                if (trueArr.length == this.values.length) {
+                    this.isselectAll = true;
+                    this.selecttxt = '取消';
+                }
             },
             getcarglist() {
                 // 获取所有的商品id
