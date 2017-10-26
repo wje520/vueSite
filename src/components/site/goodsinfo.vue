@@ -211,6 +211,12 @@
             this.getginfo(); //写完之后记得调用
             this.getcommentlist();
         },
+        //watch监视路由参数变化立即刷新---之前只改变id页面未能刷新
+        watch: {
+            '$route': function() {
+                this.getginfo();
+            }
+        },
         methods: {
             //分页功能
             sizeChange(val) {
