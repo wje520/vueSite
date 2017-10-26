@@ -109,16 +109,18 @@
 
         <div id="goodsTabs" class="goods-tab bg-wrap">
         <!--选项卡-->
-        <div id="tabHead" class="tab-head" style="position: static; top: 517px; width: 925px;">
-        <ul>
-        <li>
-        <a v-bind="{class:isContent?'selected':''}" href="javascript:;" @click='changeContent(true)'>商品介绍</a>
-        </li>
-        <li>
-        <a  v-bind="{class:!isContent?'selected':''}" href="javascript:;" @click='changeContent(false)'>商品评论</a>
-        </li>
-        </ul>
-        </div>
+        <Affix>
+          <div id="tabHead" class="tab-head" style="position: static; top: 517px; width: 925px;">
+            <ul>
+              <li>
+                <a v-bind="{class:isContent?'selected':''}" href="javascript:;" @click='changeContent(true)'>商品介绍</a>
+             </li>
+              <li>
+                  <a  v-bind="{class:!isContent?'selected':''}" href="javascript:;" @click='changeContent(false)'>商品评论</a>
+              </li>
+            </ul>
+          </div>
+        </Affix>
         <!--/选项卡-->
 
         <!--选项内容-->
@@ -220,6 +222,8 @@
 </template>
 
 <script>
+    //按需引入iview中的Affix图钉组件
+    import Affix from 'iview/src/components/affix'
     //导入jquery图片放大镜插件
     import '../../../statics/site/js/jqplugins/imgzoom/magnifier.js';
     $(function() {
@@ -229,6 +233,10 @@
     })
 
     export default {
+        // 将Affix组件注册到goodsinfo.vue的私有组件中
+        components: {
+            Affix,
+        },
         data() {
             return {
                 ginfo: {},
