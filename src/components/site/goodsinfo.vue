@@ -18,11 +18,38 @@
         <div class="wrap-box">
         <!--页面左边-->
         <div class="left-925">
-        <div class="goods-box clearfix">ssss
+        <div class="goods-box clearfix">
         <!--商品图片-->
         <div class="pic-box">
-
-        </div>sss
+            <div class="magnifier" id="magnifier1">
+                <div class="magnifier-container">
+                    <div class="images-cover"></div>
+                    <!--当前图片显示容器-->
+                    <div class="move-view"></div>
+                    <!--跟随鼠标移动的盒子-->
+                </div>
+                <div class="magnifier-assembly">
+                    <div class="magnifier-btn">
+                        <span class="magnifier-btn-left">&lt;</span>
+                        <span class="magnifier-btn-right">&gt;</span>
+                    </div>
+                    <!--按钮组-->
+                    <div class="magnifier-line">
+                        <ul class="clearfix animation03">
+                            <li v-for='item in ginfo.imglist' :key='item.id'>
+                                <div class="small-img">
+                                    <img :src="item.original_path" />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--缩略图-->
+                </div>
+                <div class="magnifier-view"></div>
+                <!--经过放大的图片显示容器-->
+            </div>
+        
+        </div>
         <!--/商品图片-->
 
         <!--商品信息-->
@@ -193,10 +220,17 @@
 </template>
 
 <script>
+    //导入jquery图片放大镜插件
+    import '../../../statics/site/js/jqplugins/imgzoom/magnifier.js';
+    $(function() {
+        $('#magnifier1').imgzoon({
+            magnifier: '#magnifier1'
+        });
+    })
+
     export default {
         data() {
             return {
-
                 ginfo: {},
                 isContent: true,
                 content: '',
@@ -284,5 +318,7 @@
     }
 </script>
 <style scoped>
-
+    /* 导入jquery插件的css样式 */
+    
+    @import url('../../../statics/site/js/jqplugins/imgzoom/css/magnifier.css');
 </style>

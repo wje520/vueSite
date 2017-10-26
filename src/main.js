@@ -12,7 +12,6 @@ import vueRouter from 'vue-router';
 
 // 1.0.2 将vueRouter和vue绑定起来
 Vue.use(vueRouter);
-
 // 1.0.3 定义路由规则
 // 导入系统的整体布局组件
 import layout from './components/site/layout.vue';
