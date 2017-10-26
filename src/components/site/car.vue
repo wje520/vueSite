@@ -42,7 +42,7 @@
                                 <tbody>
                                     <tr>
                                         <th width="48" align="center">
-                                            <el-button type='success' size='primary'>全选</el-button>
+                                            <el-button type='success' size='primary' @click='selectAll' v-model='isselectAll'>{{selecttxt}}</el-button>
                                         </th>
                                         <th align="left" colspan="2">商品信息</th>
                                         <th width="84" align="left">单价</th>
@@ -63,9 +63,9 @@
                                         </td>
                                     </tr>
                                     <!-- 显示购物车的商品信息 -->
-                                    <tr v-for='item in cargList' :key='item.id'>
+                                    <tr v-for='(item,index) in cargList' :key='item.id'>
                                             <td width="48" align="center">
-                                               <el-switch v-model='values' on-text='全选' off-text='取消'></el-switch>
+                                               <el-switch v-model='values[index]' on-text='已选' off-text='未选' @change='itemChange'></el-switch>
                                             </td>
                                             <td align="left" colspan="2">
                                                 <img  width='50' height='50' :src="item.img_url" alt="">
@@ -111,7 +111,9 @@
     export default {
         data() {
             return {
-                values: true,
+                isselectAll: false,
+                selecttxt: '全选',
+                values: [],
                 cargList: []
             }
         },
@@ -119,6 +121,30 @@
             this.getcarglist();
         },
         methods: {
+            //全选和取消功能
+            selectAll() {
+
+                this.isselectAll = !this.isselectAll; //做一个toggle
+                if (this.isselectAll) {
+                    this.selecttxt = '取消';
+                } else {
+                    this.selecttxt = '全选';
+                }
+                // 控制其他按钮，实现全选和取消
+                for (var i = 0; i < this.values.length; i++) {
+                    this.values[i] = this.isselectAll;
+                }
+
+
+            },
+            itemChange(selected) {
+                // console.log(11)
+                if (!selected) {
+                    this.isselectAll = false;
+                    this.selecttxt = '全选';
+                }
+
+            },
             getcarglist() {
                 // 获取所有的商品id
                 var goodsObj = getItem();
@@ -137,6 +163,8 @@
                     this.cargList.forEach((item, index) => {
                         // 将当前商品的数量赋值给 接口中返回的buycount属性
                         item.buycount = goodsObj[item.id]
+                            //在这里初始化values中的值
+                        this.values.push(false);
                     });
                 })
             }
