@@ -42,15 +42,16 @@
                                 <tbody>
                                     <tr>
                                         <th width="48" align="center">
-                                            <a>全选</a>
+                                            <el-button type='success' size='primary'>全选</el-button>
                                         </th>
                                         <th align="left" colspan="2">商品信息</th>
                                         <th width="84" align="left">单价</th>
-                                        <th width="104" align="center">数量</th>
-                                        <th width="104" align="left">金额(元)</th>
+                                        <th width="104" align="center">金额（元）</th>
+                                        <th width="104" align="left">数量</th>
                                         <th width="54" align="center">操作</th>
                                     </tr>
-                                    <tr>
+                                    <!-- 没有商品时显示 -->
+                                    <tr v-if='cargList.length<=0'>
                                         <td colspan="10">
                                             <div class="msg-tips">
                                                 <div class="icon warning"><i class="iconfont icon-tip"></i></div>
@@ -60,6 +61,22 @@
                                                 </div>
                                             </div>
                                         </td>
+                                    </tr>
+                                    <!-- 显示购物车的商品信息 -->
+                                    <tr v-for='item in cargList' :key='item.id'>
+                                            <td width="48" align="center">
+                                               <el-switch v-model='values' on-text='全选' off-text='取消'></el-switch>
+                                            </td>
+                                            <td align="left" colspan="2">
+                                                <img  width='50' height='50' :src="item.img_url" alt="">
+                                                <span>{{item.title}}</span>
+                                            </td>
+                                            <td width="84" align="left">{{item.sell_price}}</td>
+                                            <td width="104" align="left" style="text-align:center">{{item.sell_price*item.buycount}}</td>
+                                            <td width="104" align="left" >{{item.buycount}}</td>
+                                            <td width="54" align="center">
+                                                <el-button type='danger' size='mini'>删除</el-button>
+                                            </td>
                                     </tr>
                                     <tr>
                                         <th align="right" colspan="8">
@@ -86,11 +103,39 @@
 </template>
 
 <script>
+    //导入帮助类  获取商品种类（即商品id）
+    import {
+        getItem
+    } from '../../kits/localStorageKit.js';
+
     export default {
         data() {
-            return {}
+            return {
+                values: true,
+                cargList: []
+            }
         },
-        methods: {}
+        created() {
+            this.getcarglist();
+        },
+        methods: {
+            getcarglist() {
+                // 获取所有的商品id
+                var goodsObj = getItem();
+                var keyArr = [];
+                for (var key in goodsObj) {
+                    keyArr.push(key);
+                }
+                var ids = keyArr.join(',');
+                var url = '/site/comment/getshopcargoods/' + ids;
+                this.$http.get(url).then(res => {
+                    if (res.data.status == 1) {
+                        return this.$message.error(res.data.message);
+                    }
+                    this.cargList = res.data.message;
+                })
+            }
+        }
     }
 </script>
 <style scoped>

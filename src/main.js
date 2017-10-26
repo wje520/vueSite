@@ -40,7 +40,7 @@ var mutations = {
 }
 import { getItem } from './kits/localStorageKit'
 var getters = {
-        // 该方法获取商品种类个数
+        // 该方法获取商品种类个数(所有的商品id)
         getCount(state) {
             if (state.buyCount > 0) {
                 return state.buyCount;
