@@ -13,12 +13,14 @@ export function getItem() {
 
 //规定传入的参数goodsinfo为----{gid:102,bCount:1}
 export function setItem(goodsinfo) {
-    var goodsObj = getItem(); //goodsObj里面存的是什么？
+    var goodsObj = getItem();
+    // console.log(goodsObj)  //{}
     if (goodsObj[goodsinfo.gid]) {
         goodsObj[goodsinfo.gid] = goodsObj[goodsinfo.gid] + goodsinfo.bCount;
     } else {
         goodsObj[goodsinfo.gid] = goodsinfo.bCount;
     }
+    // console.log(goodsObj)  //{88:1}
     localStorage.setItem(key, JSON.stringify(goodsObj));
 }
 

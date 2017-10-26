@@ -13,7 +13,8 @@
         </div>
 
         <!-- 商品详情 -->
-        <div class="section">
+        <!-- v-if设置是否显示，是为了防止数据还没回来导致title变成undefined -->
+        <div class="section" v-if='ginfo.goodsinfo'>
             <div class="wrapper clearfix">
         <div class="wrap-box">
         <!--页面左边-->

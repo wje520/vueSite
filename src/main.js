@@ -21,7 +21,7 @@ import goodslist from './components/site/goodslist.vue';
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
 
-
+import car from './components/site/car.vue';
 
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
 var state = {
@@ -38,8 +38,22 @@ var mutations = {
         state.buyCount += paramsBuyCount;
     }
 }
+import { getItem } from './kits/localStorageKit'
 var getters = {
-
+        // 该方法获取商品种类个数
+        getCount(state) {
+            if (state.buyCount > 0) {
+                return state.buyCount;
+            }
+            // 从localstorage中获取存储的数据
+            var goodsObj = getItem();
+            var count = 0;
+            for (var key in goodsObj) {
+                count++; //统计所有的键  即为商品种类的个数
+            }
+            state.buyCount = count;
+            return state.buyCount;
+        }
     }
     //vuex必须在store之前引入
 import vuex from 'vuex';
@@ -52,12 +66,6 @@ var store = new vuex.Store({
 })
 
 
-
-
-
-
-
-
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -67,7 +75,8 @@ var router = new vueRouter({
             component: layout,
             children: [
                 { name: 'goodslist', path: 'goodslist', component: goodslist }, //商品列表的路由规则
-                { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo }
+                { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
+                { name: 'car', path: 'car', component: car }
             ]
         }
     ]
