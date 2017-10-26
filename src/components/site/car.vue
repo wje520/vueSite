@@ -133,6 +133,11 @@
                         return this.$message.error(res.data.message);
                     }
                     this.cargList = res.data.message;
+                    var goodsObj = getItem();
+                    this.cargList.forEach((item, index) => {
+                        // 将当前商品的数量赋值给 接口中返回的buycount属性
+                        item.buycount = goodsObj[item.id]
+                    });
                 })
             }
         }
