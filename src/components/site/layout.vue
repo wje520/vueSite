@@ -13,7 +13,11 @@
                         <a href="/login.html">登录</a>
                         <a href="/register.html">注册</a>
                         <strong>|</strong>
-                        <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{bcount}}</span>)</a>
+                        <!-- 方式1：使用global event bus 实现跨组件通讯 -->
+                        <!-- <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{bcount}}</span>)</a> -->
+                        
+                        <!-- 方式2：使用vuex的方式实现跨组件通讯 -->
+                        <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.state.buyCount}}</span>)</a>
                     </div>
                 </div>
             </div>
@@ -117,10 +121,15 @@
         },
 
         mounted() {
-            // buyCount这个参数是goodsinfo所有购买的数量，$on自动触发bcount的变化实现监听
-            vm.$on(key, (buyCount) => {
-                this.bcount += buyCount;
-            })
+            // 方式1：buyCount这个参数是goodsinfo所有购买的数量，$on自动触发bcount的变化实现监听
+            // vm.$on(key, (buyCount) => {
+            //     this.bcount += buyCount;
+            // })
+
+            // 方式2：vuex  就不需要$on了
+            // vm.$on(key, (buyCount) => {
+            //     this.bcount += buyCount;
+            // })
         }
     }
 </script>

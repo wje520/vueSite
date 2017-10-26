@@ -21,6 +21,43 @@ import goodslist from './components/site/goodslist.vue';
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
 
+
+
+// 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
+var state = {
+        buyCount: 0 //使用vuex来监视购物车数量的改变
+    }
+    //action (购物车按钮点击的时候触发action,代码： this.$store.dispatch('changeBuyCount'),购买数量)
+var actions = {
+    changeBuyCount({ commit }, paramsBuyCount) {
+        commit('changeBuyCount1', paramsBuyCount);
+    }
+}
+var mutations = {
+    changeBuyCount1(state, paramsBuyCount) {
+        state.buyCount += paramsBuyCount;
+    }
+}
+var getters = {
+
+    }
+    //vuex必须在store之前引入
+import vuex from 'vuex';
+Vue.use(vuex);
+var store = new vuex.Store({
+    state,
+    actions,
+    mutations,
+    getters
+})
+
+
+
+
+
+
+
+
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
@@ -90,6 +127,7 @@ new Vue({
     // es5的写法
     // render:function(create){create(App);}
     router,
+    store,
     // es6的写法 :将app当做根组件替换index1.html这个模板中的<div id="app">
     render: create => create(App)
 });

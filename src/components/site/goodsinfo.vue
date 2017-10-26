@@ -264,9 +264,14 @@
             }
         },
         methods: {
+
             addCar() {
-                // 通过vm.js中实例化的vm $emit触发事件,把buyCount的变化，实时更新到layout.vue的购物车中的数据
-                vm.$emit(key, this.buyCount);
+                //方式1： 通过vm.js中实例化的vm $emit触发事件,把buyCount的变化，实时更新到layout.vue的购物车中的数据
+                // vm.$emit(key, this.buyCount);
+
+                //方式2：通过vuex触发changeBuyCount   注意这里的this.buyCount是goodsinfo.vue组件中定义的
+                this.$store.dispatch('changeBuyCount', this.buyCount);
+
             },
             //分页功能
             sizeChange(val) {
