@@ -80,8 +80,8 @@
                                     </tr>
                                     <tr>
                                         <th align="right" colspan="8">
-                                            已选择商品 <b class="red" id="totalQuantity">0</b> 件 &nbsp;&nbsp;&nbsp; 商品总金额（不含运费）：
-                                            <span class="red">￥</span><b class="red" id="totalAmount">0</b>元
+                                            已选择商品 <b class="red" id="totalQuantity">{{selectCount}}</b> 件 &nbsp;&nbsp;&nbsp; 商品总金额（不含运费）：
+                                            <span class="red">￥</span><b class="red" id="totalAmount">{{selectAmount}}</b>元
                                         </th>
                                     </tr>
                                 </tbody>
@@ -111,6 +111,7 @@
     export default {
         data() {
             return {
+                selectCount: 0,
                 isselectAll: false,
                 selecttxt: '全选',
                 values: [],
@@ -122,10 +123,19 @@
         },
         //使用计算属性统计商品数量
         computed: {
-            getCount() {
+            selectAmount() {
                 var trueArr = this.values.filter(item => {
                     return item;
-                })
+                });
+                this.selectCount = trueArr.length;
+                var totalAmount = 0;
+                this.values.forEach((item, index) => {
+                    if (item) { //item为true  说明是已勾选的
+                        var gitem = this.cargList[index]; //获取勾选的购物车列表的对应项
+                        totalAmount += gitem.sell_price * gitem.buycount; //+=计算所有的和，否则只能单独计算某一项
+                    }
+                });
+                return totalAmount;
             }
         },
         methods: {
@@ -151,10 +161,11 @@
                     this.isselectAll = false;
                     this.selecttxt = '全选';
                 }
+                //以下实现values全为true，修改全选的状态
                 var trueArr = this.values.filter(item => {
                     return item;
                 });
-                console.log(trueArr)
+                // console.log(trueArr)
                 if (trueArr.length == this.values.length) {
                     this.isselectAll = true;
                     this.selecttxt = '取消';
