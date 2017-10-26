@@ -13,8 +13,7 @@
                         <a href="/login.html">登录</a>
                         <a href="/register.html">注册</a>
                         <strong>|</strong>
-                     <!-- <a href="/content/contact.html"><i class="iconfont icon-phone"></i>联系我们</a> -->
-                     <!-- <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount"><script type="text/javascript" src="/tools/submit_ajax.ashx?action=view_cart_count"></script></span>)</a> -->
+                        <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{bcount}}</span>)</a>
                     </div>
                 </div>
             </div>
@@ -77,6 +76,12 @@
 </template>
 
 <script>
+    // 导入kits/下的vm.js   
+    import {
+        vm,
+        key
+    } from '../../kits/vm.js'
+
     // 实现菜单的翻滚   对应的css也放在了style.css中
     $(function() {
         $("#menu2 li a").wrapInner('<span class="out"></span>');
@@ -105,9 +110,17 @@
 
 
     export default {
+        data() {
+            return {
+                bcount: 0
+            }
+        },
 
         mounted() {
-
+            // buyCount这个参数是goodsinfo所有购买的数量，$on自动触发bcount的变化实现监听
+            vm.$on(key, (buyCount) => {
+                this.bcount += buyCount;
+            })
         }
     }
 </script>

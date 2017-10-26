@@ -80,12 +80,8 @@
         <dt>购买数量</dt>
         <dd>
             <div class="stock-box">
-                        <input id="commodityChannelId" type="hidden" value="2">
-                        <input id="commodityArticleId" type="hidden" value="98">
-                        <input id="commodityGoodsId" type="hidden" value="0">
-                        <input id="commoditySelectNum" type="text" maxlength="9" value="1" maxvalue="10" onkeydown="return checkNumber(event);">
-                        <a class="add" onclick="addCartNum(1);">+</a>
-                        <a class="remove" onclick="addCartNum(-1);">-</a>
+                    <!-- InputNumber 计数器 -->
+                    <el-input-number v-model="buyCount" size='small' :min="1" ></el-input-number>
              </div>
                     <span class="stock-txt">
                         库存
@@ -97,7 +93,7 @@
         <dd>
         <div class="btn-buy" id="buyButton">
         <button class="buy" >立即购买</button>
-        <button class="add" >加入购物车</button>
+        <button class="add" @click='addCar'>加入购物车</button>
         </div>
         </dd>
         </dl>
@@ -222,6 +218,13 @@
 </template>
 
 <script>
+    //引入vm.js
+    import {
+        vm,
+        key
+    } from '../../kits/vm.js';
+
+
     //按需引入iview中的Affix图钉组件
     import Affix from 'iview/src/components/affix'
     //导入jquery图片放大镜插件
@@ -245,7 +248,8 @@
                 pageIndex: 1,
                 pageSize: 10,
                 totalcount: 0,
-                commentList: [] //接收后台返回的评论数据，v-for循环生成
+                commentList: [], //接收后台返回的评论数据，v-for循环生成
+                buyCount: 1
 
             }
         },
@@ -260,6 +264,10 @@
             }
         },
         methods: {
+            addCar() {
+                // 通过vm.js中实例化的vm $emit触发事件,把buyCount的变化，实时更新到layout.vue的购物车中的数据
+                vm.$emit(key, this.buyCount);
+            },
             //分页功能
             sizeChange(val) {
                 this.pageSize = val;
