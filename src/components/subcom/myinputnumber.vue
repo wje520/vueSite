@@ -23,9 +23,17 @@
         methods: {
             substract() {
                 this.count--;
+                this.sendfather();
             },
             add() {
                 this.count++;
+                this.sendfather();
+            },
+            sendfather() {
+                this.$emit('updata', {
+                    gid: this.options.gid,
+                    count: this.count //这里直接取当前组件的vm中的count
+                });
             }
         }
     }
