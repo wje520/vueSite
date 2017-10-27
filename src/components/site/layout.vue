@@ -19,6 +19,7 @@
                         <!-- 方式2：使用vuex的方式实现跨组件通讯 -->
                     <!-- <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.state.buyCount}}</span>)</a> -->
                     <router-link to="/site/car">
+                        <!-- 调用getters中的getCount方法 -->
                          <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{this.$store.getters.getCount}}</span>)</a>
                     </router-link>
                 </div>

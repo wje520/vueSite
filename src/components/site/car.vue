@@ -73,7 +73,9 @@
                                             </td>
                                             <td width="84" align="left">{{item.sell_price}}</td>
                                             <td width="104" align="left" style="text-align:center">{{item.sell_price*item.buycount}}</td>
-                                            <td width="104" align="left" >{{item.buycount}}</td>
+                                            <td width="104" align="left" >
+                                                <myinput :options='{gid:item.id,count:item.buycount}'></myinput>
+                                            </td>
                                             <td width="54" align="center">
                                                 <el-button type='danger' size='mini'>删除</el-button>
                                             </td>
@@ -108,7 +110,13 @@
         getItem
     } from '../../kits/localStorageKit.js';
 
+    //导入自定义的inputnumber组件
+    import myinput from '../subcom/myinputnumber.vue';
     export default {
+        // 注册组件
+        components: {
+            myinput
+        },
         data() {
             return {
                 selectCount: 0,
