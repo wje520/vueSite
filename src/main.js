@@ -23,6 +23,9 @@ import goodsinfo from './components/site/goodsinfo.vue';
 
 import car from './components/site/car.vue';
 
+import shopping from './components/site/shoppping.vue';
+import login from './components/site/login.vue';
+
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
 var state = {
         buyCount: 0 //使用vuex来监视购物车数量的改变
@@ -74,13 +77,36 @@ var router = new vueRouter({
             path: '/site',
             component: layout,
             children: [
-                { name: 'goodslist', path: 'goodslist', component: goodslist }, //商品列表的路由规则
+                { name: 'login', path: 'login', component: login },
+                { name: 'goodslist', path: 'goodslist', component: goodslist },
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
-                { name: 'car', path: 'car', component: car }
+                { name: 'car', path: 'car', component: car },
+                //   meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
+                { name: 'shopping', path: 'shopping', component: shopping, meta: { islogin: true } }
             ]
         }
     ]
 });
+
+//利用router的全局守卫钩子函数实现登录验证
+router.beforeEach((to, from, next) => {
+    console.log(to); //其中的meta参数默认是一个空对象  可以对它进行设置
+    if (to.meta.islogin) {
+        var url = '/site/account/islogin';
+        axios.get(url).then(res => {
+            if (res.data.code == 'logined') {
+                router.push({ name: 'shopping' });
+            } else {
+                router.push({ name: 'login' })
+            }
+        })
+    } else {
+        next();
+    }
+
+});
+
+
 
 // 2.0 axios的使用
 // 2.0.1 导入axios包
