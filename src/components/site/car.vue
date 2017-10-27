@@ -94,9 +94,9 @@
                         <div class="cart-foot clearfix">
                             <div class="right-box">
                                 <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                                <router-link to="/site/shopping">
-                                    <button class="submit" >立即结算</button>
-                                </router-link>
+                               
+                                    <button class="submit" @click='toshopping' >立即结算</button>
+                               
                             </div>
                         </div>
                         <!--购物车底部-->
@@ -127,6 +127,7 @@
         },
         data() {
             return {
+                ids: '',
                 selectCount: 0,
                 isselectAll: false,
                 selecttxt: '全选',
@@ -155,6 +156,26 @@
             }
         },
         methods: {
+            //获取选中的商品id
+            toshopping() {
+                var ids = '';
+                var idsArr = [];
+                // 1.0 获取当前购物车表格中选中的商品id
+                this.values.forEach((item, index) => {
+                    if (item) {
+                        idsArr.push(this.cargList[index].id);
+                        idsArr;
+                    }
+                })
+                ids = idsArr.join(',');
+                // 2.0 将这些商品id以逗号分隔的形式传递到/site/shopping/:ids
+                this.$router.push({
+                    name: 'shopping',
+                    params: {
+                        ids: ids
+                    }
+                })
+            },
             // 删除购物车中的商品
             deldata(goodsid) {
                 var delid = this.cargList.findIndex(item => {

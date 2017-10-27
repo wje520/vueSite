@@ -82,7 +82,7 @@ var router = new vueRouter({
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
                 { name: 'car', path: 'car', component: car },
                 //   meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
-                { name: 'shopping', path: 'shopping', component: shopping, meta: { 'islogin': true } }
+                { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } }
             ]
         }
     ]

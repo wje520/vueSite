@@ -179,6 +179,7 @@
     // 导入VDistpicker省市区级联组件
     import VDistpicker from 'v-distpicker'
     export default {
+        //注册私有组件
         components: {
             VDistpicker
         },
@@ -247,9 +248,14 @@
             }
         },
         methods: {
+            getcargoodsList() {
+
+                var url = '/site/comment/getshopcargoods/'
+            },
             onSelected(data) {
                 // alert(data.province + ' | ' + data.city + ' | ' + data.area)
-                console.log(data)
+                // console.log(data)
+
             },
         }
     }
