@@ -110,7 +110,8 @@
     //导入帮助类 删除商品数据
     import {
         getItem,
-        removeItem
+        removeItem,
+        updateItem
     } from '../../kits/localStorageKit.js';
 
     //导入帮助类  获取商品种类（即商品id）
@@ -137,6 +138,7 @@
         },
         created() {
             this.getcarglist();
+
         },
         //使用计算属性统计商品数量
         computed: {
@@ -192,9 +194,14 @@
             updata(goodsObj) {
                 // console.log(111)
                 this.cargList.forEach((item, index) => {
-                    if (item.id == goodsObj.gid) {
-                        item.buycount = goodsObj.count;
-                    }
+                        if (item.id == goodsObj.gid) {
+                            item.buycount = goodsObj.count;
+                        }
+                    })
+                    //更新某个商品的数量 
+                updateItem({
+                    gid: goodsObj.gid,
+                    bCount: goodsObj.count //注意这里的count是inputnumber组件中vm中的count
                 })
 
             },

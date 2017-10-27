@@ -30,3 +30,10 @@ export function removeItem(goodsid) {
     // localStorage.removeItem(goodsid)  //可不可以这样删除呢？
     localStorage.setItem(key, JSON.stringify(goodsObj));
 }
+//更新购买的某个商品的数量
+export function updateItem(obj) {
+    var goodsObj = getItem();
+    goodsObj[obj.gid] = obj.bCount; //实现某个商品的数量的更新
+    localStorage.setItem(key, JSON.stringify(goodsObj));
+
+}
