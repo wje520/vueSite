@@ -23,7 +23,7 @@ import goodsinfo from './components/site/goodsinfo.vue';
 
 import car from './components/site/car.vue';
 
-import shopping from './components/site/shoppping.vue';
+import shopping from './components/site/shopping.vue';
 import login from './components/site/login.vue';
 
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
@@ -82,7 +82,7 @@ var router = new vueRouter({
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
                 { name: 'car', path: 'car', component: car },
                 //   meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
-                { name: 'shopping', path: 'shopping', component: shopping, meta: { islogin: true } }
+                { name: 'shopping', path: 'shopping', component: shopping, meta: { 'islogin': true } }
             ]
         }
     ]
@@ -90,12 +90,19 @@ var router = new vueRouter({
 
 //利用router的全局守卫钩子函数实现登录验证
 router.beforeEach((to, from, next) => {
-    console.log(to); //其中的meta参数默认是一个空对象  可以对它进行设置
+    // 在localStorage中记录当前浏览器访问的的最后一个路由规则的名称
+    if (to.name != 'login') {
+        localStorage.setItem('changeRouterName', to.name);
+    }
+    // console.log(to); //其中的meta参数默认是一个空对象  可以对它进行设置
+    // console.log(from)
+    // console.log(next)
     if (to.meta.islogin) {
         var url = '/site/account/islogin';
         axios.get(url).then(res => {
             if (res.data.code == 'logined') {
-                router.push({ name: 'shopping' });
+                //router.push({ name: 'shopping' });   //这样会报错
+                next()
             } else {
                 router.push({ name: 'login' })
             }
@@ -117,7 +124,6 @@ axios.defaults.baseURL = 'http://157.122.54.189:9095';
 // 2.0.3 想要在将来的每个子组件中的方法中均可以使用 this.$http去调用其方法执行ajax请求
 //就要将axios对象挂载到vue的原型属性$http上
 Vue.prototype.$http = axios;
-
 // 设定axios的参数使得axios发出的ajax请求能够自动带上cookie
 axios.defaults.withCredentials = true;
 
