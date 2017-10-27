@@ -77,7 +77,7 @@
                                                 <myinput :options='{gid:item.id,count:item.buycount}' @updata='updata'></myinput>
                                             </td>
                                             <td width="54" align="center">
-                                                <el-button type='danger' size='mini'>删除</el-button>
+                                                <el-button type='danger' size='mini' @click='deldata(item.id)'>删除</el-button>
                                             </td>
                                     </tr>
                                     <tr>
@@ -105,10 +105,16 @@
 </template>
 
 <script>
-    //导入帮助类  获取商品种类（即商品id）
+    //导入帮助类 删除商品数据
     import {
-        getItem
+        getItem,
+        removeItem
     } from '../../kits/localStorageKit.js';
+
+    //导入帮助类  获取商品种类（即商品id）
+    // import {
+    //     getItem
+    // } from '../../kits/localStorageKit.js';
 
     //导入自定义的inputnumber组件
     import myinput from '../subcom/myinputnumber.vue';
@@ -147,6 +153,18 @@
             }
         },
         methods: {
+            // 删除购物车中的商品
+            deldata(goodsid) {
+                var delid = this.cargList.findIndex(item => {
+                    if (item.id == goodsid) {
+                        return;
+                    }
+                });
+                this.cargList.splice(delid, 1);
+                this.values.splice(delid, 1);
+                removeItem(delid);
+                this.$message.success('删除成功')
+            },
             //子传父的逻辑
             updata(goodsObj) {
                 // console.log(111)
