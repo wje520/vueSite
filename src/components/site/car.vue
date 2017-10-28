@@ -158,25 +158,35 @@
             }
         },
         methods: {
-            //获取选中的商品id
+            //获取选中的商品id  未选中时，不能跳转
             toshopping() {
-                var ids = '';
-                var idsArr = [];
-                // 1.0 获取当前购物车表格中选中的商品id
-                this.values.forEach((item, index) => {
-                    if (item) {
-                        idsArr.push(this.cargList[index].id);
-                        idsArr;
-                    }
-                })
-                ids = idsArr.join(',');
-                // 2.0 将这些商品id以逗号分隔的形式传递到/site/shopping/:ids
-                this.$router.push({
-                    name: 'shopping',
-                    params: {
-                        ids: ids
-                    }
-                })
+                var falseArr = this.values.filter(function(item, index, arr) {
+                        return item == false;
+                    })
+                    // console.log(falseArr)
+                if (falseArr.length < this.values.length) {
+                    var ids = '';
+                    var idsArr = [];
+                    // 1.0 获取当前购物车表格中选中的商品id
+                    this.values.forEach((item, index) => {
+                        if (item) {
+                            idsArr.push(this.cargList[index].id);
+                        }
+                    })
+                    ids = idsArr.join(',');
+                    // 2.0 将这些商品id以逗号分隔的形式传递到/site/shopping/:ids
+                    this.$router.push({
+                            name: 'shopping',
+                            params: {
+                                ids: ids
+                            }
+                        })
+                        //未选中时，弹出提示
+                } else if (falseArr.length = this.values.length) {
+                    return this.$message.error('请勾选要购买的商品')
+                }
+
+
             },
             // 删除购物车中的商品
             deldata(goodsid) {
