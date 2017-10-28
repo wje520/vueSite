@@ -194,7 +194,7 @@
                 index = this.cargList.findIndex(item => {
                     return item.id == goodsid
                 });
-                console.log(index)
+                // console.log(index)
                 this.cargList.splice(index, 1);
                 this.values.splice(index, 1);
                 removeItem(goodsid);

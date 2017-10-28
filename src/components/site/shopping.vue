@@ -277,7 +277,21 @@
                             if (res.data.status == 1) {
                                 return this.$message.error(res.data.message);
                             }
-                            this.$message.success('下单成功');
+                            // 跳转  res.data.message格式：{orderid:订单号}
+                            // this.$message.success('下单成功');
+                            this.$message({
+                                message: '下单成功，正在跳转支付页面',
+                                type: 'success',
+                                duration: 2000,
+                                onClose: () => {
+                                    this.$router.push({
+                                        name: 'pay',
+                                        params: {
+                                            orderid: res.data.message.orderid //根据后台接口返回  向下一个链接传入订单号参数
+                                        }
+                                    });
+                                }
+                            })
                         })
                     } else {
                         return false;
@@ -313,7 +327,7 @@
                         this.form.goodsAmount += item.buycount * item.sell_price;
                         //将来要提交的所购买的商品id及对应的购买数量
                         this.form.cargoodsobj[item.id] = goodsObj[item.id]
-                        console.log(this.form.cargoodsobj)
+                            // console.log(this.form.cargoodsobj)
                         this.form.goodsids = ids;
                     })
 

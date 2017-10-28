@@ -25,7 +25,7 @@ import car from './components/site/car.vue';
 
 import shopping from './components/site/shopping.vue';
 import login from './components/site/login.vue';
-
+import pay from './components/site/pay.vue';
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
 var state = {
         buyCount: 0 //使用vuex来监视购物车数量的改变
@@ -82,7 +82,8 @@ var router = new vueRouter({
                 { name: 'goodsinfo', path: 'goodsinfo/:goodsid', component: goodsinfo },
                 { name: 'car', path: 'car', component: car },
                 //   meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
-                { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } }
+                { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } },
+                { name: 'pay', path: 'pay/:orderid', component: pay },
             ]
         }
     ]
