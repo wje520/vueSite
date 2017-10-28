@@ -88,6 +88,8 @@
     export default {
         data() {
             return {
+
+                orderid: this.$route.params.orderid,
                 orderinfo: {}
             }
         },
@@ -98,10 +100,26 @@
             //在页面加载完成，引入jq插件
             $("#container").erweima({
                 label: '扫一扫支付',
-                text: 'www.baidu.com'
+                text: 'http://127.0.0.1:7071/#/site/payamount' + this.orderid //跳转到支付页
+                    // text: 'http://127.0.0.1:7071/#/site/payamount/326'
             });
         },
         methods: {
+            //检查是否成功支付，成功支付后跳转到支付成功
+            checkstatus() {
+                //调取订单信息接口，如果status=2说明支付成功，pc端跳转至支付成功页面
+                var orderid = this.$route.params.orderid;
+                // console.log(orderid)
+                var url = '/site/validate/order/getorder/' + orderid;
+                this.$http.get(url).then(res => {
+                    if (res.data.message[0].status == 2) {
+                        this.$router.push({
+                            name: 'paysuccesspc'
+                        })
+                    }
+                })
+            },
+            //获取订单信息
             getorderlist() {
                 var orderid = this.$route.params.orderid;
                 // console.log(orderid)

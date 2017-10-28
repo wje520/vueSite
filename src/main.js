@@ -22,10 +22,11 @@ import goodslist from './components/site/goodslist.vue';
 import goodsinfo from './components/site/goodsinfo.vue';
 
 import car from './components/site/car.vue';
-
 import shopping from './components/site/shopping.vue';
 import login from './components/site/login.vue';
 import pay from './components/site/pay.vue';
+import payamount from './components/site/payamount.vue';
+import paysuccess from './components/site/paysuccess.vue';
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
 var state = {
         buyCount: 0 //使用vuex来监视购物车数量的改变
@@ -72,6 +73,9 @@ var store = new vuex.Store({
 var router = new vueRouter({
     routes: [
         { name: 'default', path: '/', redirect: '/site' },
+        { name: 'payamount', path: '/site/payamount/:orderid', component: payamount },
+        // 配置手机端支付成功后的跳转 不依赖于layout
+        { name: 'paysuccess', path: 'site/paysuccess', component: paysuccess },
         {
             name: 'layout',
             path: '/site',
@@ -83,7 +87,10 @@ var router = new vueRouter({
                 { name: 'car', path: 'car', component: car },
                 //   meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
                 { name: 'shopping', path: 'shopping/:ids', component: shopping, meta: { 'islogin': true } },
-                { name: 'pay', path: 'pay/:orderid', component: pay },
+                { name: 'pay', path: 'pay/:orderid', component: pay, meta: { 'islogin': true } },
+                //配置pc端支付成功后的跳转
+                { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
+
             ]
         }
     ]
