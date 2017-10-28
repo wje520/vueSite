@@ -163,7 +163,7 @@
                                         </p>
                                         <p class="btn-box">
                                             <a class="btn button" href="/cart.html">返回购物车</a>
-                                            <input id="btnSubmit" name="btnSubmit" type="button" value="确认提交" class="btn submit">
+                                            <input id="btnSubmit" name="btnSubmit" type="button" value="确认提交" class="btn submit" @click="submitForm('ruleForm')">
                                         </p>
                                     </div>
                                 </div>
@@ -268,6 +268,23 @@
             }
         },
         methods: {
+            // 提交表单
+            submitForm(formref) {
+                this.$refs[formref].validate((valid) => {
+                    if (valid) {
+                        var url = '/site/validate/order/setorder';
+                        this.$http.post(url, this.form).then(res => {
+                            if (res.data.status == 1) {
+                                return this.$message.error(res.data.message);
+                            }
+                            this.$message.success('下单成功');
+                        })
+                    } else {
+                        return false;
+                    }
+                })
+            },
+            //运费设置
             changExpress(val) {
                 // console.log(val);
                 var newArr = this.expresslist.filter(item => {
@@ -294,6 +311,10 @@
                         item.buycount = goodsObj[item.id];
                         //计算所有商品的总金额
                         this.form.goodsAmount += item.buycount * item.sell_price;
+                        //将来要提交的所购买的商品id及对应的购买数量
+                        this.form.cargoodsobj[item.id] = goodsObj[item.id]
+                        console.log(this.form.cargoodsobj)
+                        this.form.goodsids = ids;
                     })
 
                 })
