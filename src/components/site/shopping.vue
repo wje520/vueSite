@@ -100,9 +100,9 @@
                                     <span>3、配送方式</span>
                                 </h2>
                                     <!--取得一个DataTable-->
-                                    <el-radio-group v-model="form.express_id" class="item-box clearfix">
+                                    <el-radio-group v-model="form.express_id"  @change='changExpress' class="item-box clearfix">
                                         <!-- 这里要遍历 -->
-                                            <el-radio :label="1" >顺丰快递</el-radio>
+                                            <el-radio v-for='item in expresslist' :key='item.id' :label="item.id"   >{{item.title}}(运费：{{item.express_fee}}元)</el-radio>
                                     </el-radio-group>
                                 <h2 class="slide-tit">
                                     <span>4、商品清单</span>
@@ -116,21 +116,23 @@
                                             <th width="84" align="center">购买数量</th>
                                             <th width="104" align="left">金额(元)</th>
                                         </tr>
-                                        <tr>
+                                        <tr v-for='(item,index) in selectlist' :key='index'>
                                             <td width="68">
-                                                <a target="_blank" href="/goods/show-89.html">
-                                                    <img src="" class="img">
-                                                </a>
+                                               <router-link v-bind="{to:'/site/goodsinfo/'+item.id}">
+                                                    <img :src="item.img_url" class="img">
+                                               </router-link>                                              
                                             </td>
                                             <td>
-                                                <a target="_blank" href="/goods/show-89.html">小米（Mi）小米Note 16G双网通版</a>
+                                                <router-link v-bind="{to:'/site/goodsinfo/'+item.id}">
+                                                    <span v-text='item.title'></span>
+                                               </router-link>  
                                             </td>
                                             <td>
-                                                <span class="red">￥2299.00</span>
+                                                <span class="red">￥{{item.sell_price}}</span>
                                             </td>
-                                            <td align="center">1</td>
+                                            <td align="center">{{item.buycount}}</td>
                                             <td>
-                                                <span class="red">￥2299.00</span>
+                                                <span class="red">￥{{item.sell_price*item.buycount}}</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -144,24 +146,24 @@
                                         <dl>
                                             <dt>订单备注(100字符以内)</dt>
                                             <dd>
-                                                <textarea name="message" class="input" style="height:35px;"></textarea>
+                                                <textarea name="message" class="input" style="height:35px;" v-model='form.message'></textarea>
                                             </dd>
                                         </dl>
                                     </div>
                                     <div class="right-box">
                                         <p>
-                                            商品 <label class="price">1</label> 件&nbsp;&nbsp;&nbsp;&nbsp; 商品金额：￥
-                                            <label id="goodsAmount" class="price">2299.00</label> 元&nbsp;&nbsp;&nbsp;&nbsp;
+                                            商品 <label class="price">{{selectlist.length}}</label> 件&nbsp;&nbsp;&nbsp;&nbsp; 商品金额：￥
+                                            <label id="goodsAmount" class="price">{{form.goodsAmount}}</label> 元&nbsp;&nbsp;&nbsp;&nbsp;
                                         </p>
                                         <p>
-                                            运费：￥<label id="expressFee" class="price">0.00</label> 元
+                                            运费：￥<label id="expressFee" class="price">{{currentFee}}</label> 元
                                         </p>
                                         <p class="txt-box">
-                                            应付总金额：￥<label id="totalAmount" class="price">2299.00</label>
+                                            应付总金额：￥<label id="totalAmount" class="price">{{totalAmount}}</label>
                                         </p>
                                         <p class="btn-box">
                                             <a class="btn button" href="/cart.html">返回购物车</a>
-                                            <input id="btnSubmit" name="btnSubmit" type="submit" value="确认提交" class="btn submit">
+                                            <input id="btnSubmit" name="btnSubmit" type="button" value="确认提交" class="btn submit">
                                         </p>
                                     </div>
                                 </div>
@@ -176,6 +178,10 @@
 </template>
 
 <script>
+    //导入localstorage中的方法
+    import {
+        getItem
+    } from '../../kits/localStorageKit.js'
     // 导入VDistpicker省市区级联组件
     import VDistpicker from 'v-distpicker'
     export default {
@@ -192,23 +198,26 @@
                 callback();
             }
             var checkEmail = (rule, value, callback) => {
-                var reg = /^\\w+((-\\w+)|(\\.\\w+))*\\@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$/;
+                var reg = /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/;
                 if (!reg.test(value)) {
                     return callback(new Error('邮箱格式错误'));
                 }
                 callback();
             }
             var checkPostCode = (rule, value, callback) => {
-                var reg = /^\\d{6}$/;
+                var reg = /^\d{6}$/;
                 if (!reg.test(value)) {
                     return callback(new Error('邮编格式错误'))
                 }
                 callback();
             }
             return {
+                currentFee: 20,
+                expresslist: [],
+                selectlist: [],
                 form: {
                     "goodsAmount": 0,
-                    "expressMoment": 0,
+                    "expressMoment": 0, //快递费
                     "accept_name": "",
                     "area": {},
                     "address": "",
@@ -216,7 +225,7 @@
                     "email": "",
                     "post_code": "",
                     "payment_id": "6",
-                    "express_id": "1",
+                    "express_id": 1, //填写的是number类型
                     "message": "",
                     "goodsids": "",
                     "cargoodsobj": {}
@@ -247,15 +256,53 @@
                 }
             }
         },
+        created() {
+            this.getexpresslist();
+            this.getselectlist();
+        },
+        computed: {
+            //计算总金额+运费
+            totalAmount() {
+                var amount = this.form.goodsAmount + this.currentFee;
+                return amount;
+            }
+        },
         methods: {
-            getcargoodsList() {
-
-                var url = '/site/comment/getshopcargoods/'
+            changExpress(val) {
+                // console.log(val);
+                var newArr = this.expresslist.filter(item => {
+                    return item.id == val;
+                })
+                this.form.expressMoment = this.currentFee = newArr[0].express_fee;
             },
+            // 获取配送方式
+            getexpresslist() {
+                var url = '/site/validate/order/getexpresslist';
+                this.$http.get(url).then(res => {
+                    this.expresslist = res.data.message;
+                })
+            },
+            //获取购物车中选中的商品数据
+            getselectlist() {
+                var ids = this.$route.params.ids;
+                var url = '/site/comment/getshopcargoods/' + ids;
+                this.$http.get(url).then(res => {
+                    this.selectlist = res.data.message;
+                    // 从localstorage中获取对应商品的购买数量buycount
+                    var goodsObj = getItem();
+                    this.selectlist.forEach(item => {
+                        item.buycount = goodsObj[item.id];
+                        //计算所有商品的总金额
+                        this.form.goodsAmount += item.buycount * item.sell_price;
+                    })
+
+                })
+            },
+            // 省市区三级联动
             onSelected(data) {
                 // alert(data.province + ' | ' + data.city + ' | ' + data.area)
                 // console.log(data)
-
+                this.form.area = data;
             },
         }
     }
