@@ -180,14 +180,15 @@
             },
             // 删除购物车中的商品
             deldata(goodsid) {
-                var delid = this.cargList.findIndex(item => {
-                    if (item.id == goodsid) {
-                        return;
-                    }
+                var index = -1;
+                index = this.cargList.findIndex(item => {
+                    return item.id == goodsid
                 });
-                this.cargList.splice(delid, 1);
-                this.values.splice(delid, 1);
-                removeItem(delid);
+                console.log(index)
+                this.cargList.splice(index, 1);
+                this.values.splice(index, 1);
+                removeItem(goodsid);
+
                 this.$message.success('删除成功')
             },
             //子传父的逻辑
