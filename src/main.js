@@ -27,6 +27,7 @@ import login from './components/site/login.vue';
 import pay from './components/site/pay.vue';
 import payamount from './components/site/payamount.vue';
 import paysuccess from './components/site/paysuccess.vue';
+import vipcenter from './components/site/vipcenter.vue';
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
 var state = {
         buyCount: 0 //使用vuex来监视购物车数量的改变
@@ -90,7 +91,7 @@ var router = new vueRouter({
                 { name: 'pay', path: 'pay/:orderid', component: pay, meta: { 'islogin': true } },
                 //配置pc端支付成功后的跳转
                 { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
-
+                { name: 'vipcenter', path: 'vip/center', component: vipcenter },
             ]
         }
     ]

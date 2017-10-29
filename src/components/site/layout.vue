@@ -10,8 +10,11 @@
                         <a target="_blank" href="#"></a>
                     </div>
                     <div id="menu" class="right-box">
-                        <router-link to="/site/login">登录</router-link>
-                        <a href="/register.html">注册</a>
+                       
+                             <router-link to="/site/login" v-if='!isvipshow'>登录</router-link>
+                             <a href="/register.html" v-if='!isvipshow'>注册</a>
+                             <router-link to="/site/vip/center" v-if='isvipshow'>会员中心</router-link>
+                             <a href="javascript:;" @click='logout' v-if='isvipshow'>退出</a>
                         <strong>|</strong>
                         <!-- 方式1：使用global event bus 实现跨组件通讯 -->
                         <!-- <a href="/cart.html"><i class="iconfont icon-cart"></i>购物车(<span id="shoppingCartCount">{{bcount}}</span>)</a> -->
@@ -120,7 +123,8 @@
     export default {
         data() {
             return {
-                bcount: 0
+                bcount: 0,
+                isvipshow: false
             }
         },
 
@@ -134,6 +138,43 @@
             // vm.$on(key, (buyCount) => {
             //     this.bcount += buyCount;
             // })
+
+        },
+        mounted() {
+
+            //$on监听changeshow事件  事件名和$emit对应 不要写错
+            vm.$on('changeshow', () => {
+                // 获取到localStorage中的key="islogin"对应的值
+                this.checklogin();
+            })
+            this.checklogin();
+        },
+        methods: {
+            logout() {
+                //要调接口退出
+                var url = '/site/account/logout';
+                this.$http.get(url).then(res => {
+                    // 把显示状态变成false
+                    this.isvipshow = false;
+                    //把当前的登录状态设置到localstorage
+                    localStorage.setItem('islogin', false);
+                    this.$router.push({
+                        name: 'login'
+                    })
+
+                })
+            },
+
+            checklogin() {
+                var islogin = localStorage.getItem('islogin');
+                // 注意localstorage中的存的值是字符串
+                if (islogin == "true") {
+                    this.isvipshow = true;
+                } else {
+                    this.isvipshow = false;
+                }
+
+            }
         }
     }
 </script>

@@ -40,6 +40,11 @@
 </template>
 
 <script>
+    //导入共有的vm实例
+    import {
+        vm
+    } from '../../kits/vm.js';
+
     export default {
         data() {
             return {
@@ -66,11 +71,16 @@
                         this.$router.push({
                             name: 'goodslist'
                         })
-                    } else {
-                        this.$router.push({
-                            name: toRouterName //这里传入的是变量，别用引号
-                        });
                     }
+                    //把当前的的登录状态设置到localstorage
+                    localStorage.setItem('islogin', true);
+                    //使用全局事件总线实现跨组件通讯  $emit触发
+                    vm.$emit('changeshow');
+
+                    this.$router.push({
+                        name: toRouterName //这里传入的是变量，别用引号
+                    });
+
 
                 })
             }
