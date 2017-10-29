@@ -103,6 +103,16 @@
                 text: 'http://127.0.0.1:7071/#/site/payamount' + this.orderid //跳转到支付页
                     // text: 'http://127.0.0.1:7071/#/site/payamount/326'
             });
+
+            //每隔5000毫秒去请求一下服务器是否支付成功
+            this.interval = setInterval(this.checkstatus, 5000);
+        },
+        beforeDestroy() {
+            //在页面离开以后清除this.interval
+            if (this.interval) {
+                clearInterval(this.interval);
+            }
+
         },
         methods: {
             //检查是否成功支付，成功支付后跳转到支付成功
