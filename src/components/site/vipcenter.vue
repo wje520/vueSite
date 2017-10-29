@@ -37,9 +37,10 @@
                                                                 <span>订单管理</span>
                                                             </h2>
                                                             <div class="list">
-                                                                <p>
-                                                                    <a href="#/site/member/orderlist" class="">
-                                                                        <i class="iconfont icon-arrow-right"></i>交易订单</a>
+                                                                <p>             
+                                                                    <router-link to="/site/vip/orderlist">
+                                                                    <i class="iconfont icon-arrow-right"></i>交易订单
+                                                                    </router-link>
                                                                 </p>
                                                             </div>
                                                         </li>
@@ -120,9 +121,13 @@
 <script>
     export default {
         data() {
-            return {}
+            return {
+
+            }
         },
-        methods: {}
+        methods: {
+
+        }
     }
 </script>
 <style scoped>

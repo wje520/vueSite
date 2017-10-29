@@ -112,7 +112,6 @@
             if (this.interval) {
                 clearInterval(this.interval);
             }
-
         },
         methods: {
             //检查是否成功支付，成功支付后跳转到支付成功
