@@ -9,7 +9,7 @@
     },
     "author": "",
     "license": "ISC",
-    "devDependencies": { //开发时依赖
+    "devDependencies": {
         "babel-core": "^6.26.0",
         "babel-loader": "^7.1.2",
         "babel-plugin-transform-runtime": "^6.23.0",
@@ -28,7 +28,7 @@
         "webpack": "^3.4.0",
         "webpack-dev-server": "^2.9.3"
     },
-    "dependencies": { //运行时依赖
+    "dependencies": {
         "axios": "^0.16.2",
         "element-ui": "^1.4.7",
         "iview": "^2.5.1",

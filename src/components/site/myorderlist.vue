@@ -107,11 +107,11 @@
                                                                      查看订单
                                                                 </router-link>
                                                                 <br>
-                                                                <router-link v-bind="{to:'/site/pay/'+item.id}">
+                                                                <router-link v-if="item.status<=1" v-bind="{to:'/site/pay/'+item.id}">
                                                                 |去付款
                                                                 </router-link>
                                                                 <br>
-                                                                <a href="javascript:void(0)">|取消</a>
+                                                                <a href="javascript:void(0)"  v-if="item.status<=1" @click="cancleOrder(item.id)">|取消</a>
                                                                 <br>
                                                             </td>
                                                         </tr>
@@ -156,6 +156,17 @@
             this.getorderlist();
         },
         methods: {
+            //取消订单
+            cancleOrder(orderid) {
+                // var orderid=this.$route.params.orderid;
+                // console.log(11)
+                console.log(orderid) //这里传入了orderid，就不需要从路由参数中再获取
+                var url = '/site/validate/order/cancelorder/' + orderid;
+                this.$http.get(url).then(res => {
+                    this.getorderlist();
+                })
+            },
+            // 分页获取数据
             sizeChange(pagesize) {
                 this.pageSize = pagesize;
                 this.getorderlist();
