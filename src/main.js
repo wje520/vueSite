@@ -29,7 +29,7 @@ import payamount from './components/site/payamount.vue';
 import paysuccess from './components/site/paysuccess.vue';
 import vipcenter from './components/site/vipcenter.vue';
 import orderlist from './components/site/myorderlist.vue'
-
+import orderinfo from './components/site/orderinfo.vue'
 
 // 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
 var state = {
@@ -96,6 +96,7 @@ var router = new vueRouter({
                 { name: 'paysuccesspc', path: 'paysuccesspc', component: paysuccess },
                 { name: 'vipcenter', path: 'vip/center', component: vipcenter },
                 { name: 'orderlist', path: 'vip/orderlist', component: orderlist },
+                { name: 'orderinfo', path: 'vip/orderinfo/:orderid', component: orderinfo },
             ]
         }
     ]

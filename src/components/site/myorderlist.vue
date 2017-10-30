@@ -103,9 +103,13 @@
                                                                {{item.statusName}}
                                                             </td>
                                                             <td align="left">
-                                                                <a href="#/site/member/orderinfo/12" class="">查看订单</a>
+                                                                <router-link v-bind="{to:'/site/vip/orderinfo/'+item.id}">
+                                                                     查看订单
+                                                                </router-link>
                                                                 <br>
-                                                                <a href="#/site/goods/payment/12" class="">|去付款</a>
+                                                                <router-link v-bind="{to:'/site/pay/'+item.id}">
+                                                                |去付款
+                                                                </router-link>
                                                                 <br>
                                                                 <a href="javascript:void(0)">|取消</a>
                                                                 <br>
