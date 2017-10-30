@@ -106,9 +106,12 @@
                                                 <dl class="head form-group">
                                                     <dd>
                                                         订单号：{{orderdetial.orderinfo.order_no}}
-                                                        <router-link v-bind="{to:'/site/payamount/'+orderdetial.orderinfo.id}" class="btn-pay">
+                                                        <router-link  v-if="orderdetial.orderinfo.status<=1" v-bind="{to:'/site/payamount/'+orderdetial.orderinfo.id}" class="btn-pay">
                                                         去付款
-                                                        </router-link>  
+                                                        </router-link> 
+                                                        <a href="javascript:;" v-if="orderdetial.orderinfo.status==3" @click="complate(orderdetial.orderinfo.id)" class="btn-pay">
+                                                        待签收
+                                                        </a>   
                                                         <!---->
                                                     </dd>
                                                 </dl>
@@ -216,6 +219,14 @@
             this.getorderdetial();
         },
         methods: {
+            //订单待签收
+            complate(orderid) {
+                var url = '/site/validate/order/complate/' + orderid;
+                this.$http.get(url).then(res => {
+                    this.getorderdetial();
+                })
+            },
+            //获取订单明细
             getorderdetial() {
                 // var orderid = this.$route.params.orderid;
                 var url = '/site/validate/order/getorderdetial/' + this.orderid;
